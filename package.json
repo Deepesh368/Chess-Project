@@ -1,0 +1,27 @@
+{
+  "name": "chess_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel templates/static/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deepesh368/Chess_Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Deepesh368/Chess_Project/issues"
+  },
+  "homepage": "https://github.com/Deepesh368/Chess_Project#readme",
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-beta.2"
+  }
+}

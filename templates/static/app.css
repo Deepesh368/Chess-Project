@@ -1,0 +1,5 @@
+#root {
+    display: grid;
+    place-content: center;
+    background-color: white;
+}
