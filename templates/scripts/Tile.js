@@ -2,23 +2,19 @@ import React from "react";
 
 import "../static/Tile.css"
 
-
-import image from 'url:../Images/black_king.png'
-
-
-
-const Tile = (num, key) => {
-    console.log(key)
-    if (num.num === 1) {
+const Tile = (props) => {
+    let cname = "tile white-tile";
+    if (props.num === 0) {
+        cname = "tile brown-tile";
+    }
+    if (props.image) {
         return (
-            <div key={key} className="tile brown-tile"><img src={image} /></div>
+            <div key={props.unq} className={cname}><img src={props.image} /></div>
         )
     }
-    else {
-        return (
-            <div key={key} className="tile white-tile"></div>
-        )
-    }
+    return (
+        <div key={props.unq} className={cname}></div>
+    )
 }
 
 export default Tile;
