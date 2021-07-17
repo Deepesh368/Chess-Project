@@ -5,6 +5,22 @@
     width: 113px;
 }
 
+.piece {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100px;
+}
+
+.piece:hover {
+    cursor: grab;
+}
+
+.piece:active {
+    cursor: grabbing;
+}
+
 .brown-tile {
     background-color: #be7e40;
 
