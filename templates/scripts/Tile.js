@@ -9,11 +9,17 @@ const Tile = (props) => {
     }
     if (props.image) {
         return (
-            <div key={props.unq} className={cname}><img src={props.image} /></div>
+            <div key={props.unq} className={cname}>
+                <div className = "piece" style = {{backgroundImage: `url(${props.image})`}}>
+
+                </div>
+            </div>
         )
     }
     return (
-        <div key={props.unq} className={cname}></div>
+        <div key={props.unq} className={cname}>
+
+        </div>
     )
 }
 
