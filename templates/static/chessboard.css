@@ -1,20 +1,20 @@
 .block {
     display: grid;
-    grid-template-columns: repeat(8,113px);
-    grid-template-rows: repeat(8,113px);
-    width: 904px;
-    height: 904px;
+    grid-template-columns: repeat(8,100px);
+    grid-template-rows: repeat(8,100px);
+    width: 800px;
+    height: 800px;
     border: 5px solid black;
 }
 
 .block .brown-square {
-    width: 113px;
-    height: 113px;
+    width: 100px;
+    height: 100px;
     background-color: #be7e40;
 }
 
 .block .white-square {
-    width: 113px;
-    height: 113px;
+    width: 100px;
+    height: 100px;
     background-color: white;
 }
