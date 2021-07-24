@@ -2,7 +2,6 @@ import React from "react";
 import { render } from "react-dom";
 import Chessboard from "./chessboard";
 import "../static/app.css"
-import updatePosition from "./chessboard"
 import blackPawn from 'url:../Images/black_pawn.png'
 import whitePawn from 'url:../Images/white_pawn.png'
 import whiteKnight from 'url:../Images/white_horse.png'
@@ -32,6 +31,8 @@ const App = () => {
     let blackPawnRank = 1;
     let whitePieceRank = 7;
     let blackPieceRank = 0;
+    let blackkingPos = 4;
+    let queenPos = 3;
     if (facing == 1) {
         let temp = whitePawnRank;
         whitePawnRank = blackPawnRank;
@@ -39,6 +40,8 @@ const App = () => {
         temp = whitePieceRank;
         whitePieceRank = blackPieceRank;
         blackPieceRank = temp;
+        blackkingPos = 3
+        queenPos = 4;
     }
     var pieces = [];
 
@@ -47,15 +50,17 @@ const App = () => {
         let wp = new ChessPiece(whitePawn, whitePawnRank, j);
         pieces.push(bp);
         pieces.push(wp);
+
     }
 
-    let bk = new ChessPiece(blackKing, blackPieceRank, 4);
+
+    let bk = new ChessPiece(blackKing, blackPieceRank, blackkingPos);
     pieces.push(bk);
-    let wk = new ChessPiece(whiteKing, whitePieceRank, 4);
+    let wk = new ChessPiece(whiteKing, whitePieceRank, blackkingPos);
     pieces.push(wk)
-    let wq = new ChessPiece(whiteQueen, whitePieceRank, 3);
+    let wq = new ChessPiece(whiteQueen, whitePieceRank, queenPos);
     pieces.push(wq);
-    let bq = new ChessPiece(blackQueen, blackPieceRank, 3);
+    let bq = new ChessPiece(blackQueen, blackPieceRank, queenPos);
     pieces.push(bq)
     let br1 = new ChessPiece(blackRook, blackPieceRank, 0)
     pieces.push(br1)
@@ -83,6 +88,8 @@ const App = () => {
     pieces.push(bk1)
     let bk2 = new ChessPiece(blackKnight, blackPieceRank, 6);
     pieces.push(bk2)
+
+
     return (
         <div>
 
