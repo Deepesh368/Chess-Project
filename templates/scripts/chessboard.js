@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import "../static/chessboard.css";
 import Tile from "./Tile";
 import blackPawn from 'url:../Images/black_pawn.png'
@@ -13,16 +13,18 @@ import blackBishop from 'url:../Images/black_bishop.png'
 import blackRook from 'url:../Images/black_rook.png'
 import blackKing from 'url:../Images/black_king.png'
 import blackQueen from 'url:../Images/black_queen.png'
+import Referee from "./referee.js";
 
 class ChessPiece {
-    constructor(image, x, y) {
+    constructor(image, x, y, type) {
         this.image = image;
         this.x = x;
         this.y = y;
+        this.type = type;
     }
 }
 
-initialBoardState = []
+const initialBoardState = []
 
 
 let facing = 0;
@@ -44,80 +46,97 @@ if (facing == 1) {
 }
 
 for (let j = 0; j < 8; j++) {
-    let bp = new ChessPiece(blackPawn, blackPawnRank, j);
-    let wp = new ChessPiece(whitePawn, whitePawnRank, j);
+    let bp = new ChessPiece(blackPawn, blackPawnRank, j, "BP");
+    let wp = new ChessPiece(whitePawn, whitePawnRank, j, "WP");
     initialBoardState.push(bp);
     initialBoardState.push(wp);
 
 }
 
 
-let bk = new ChessPiece(blackKing, blackPieceRank, blackkingPos);
+let bk = new ChessPiece(blackKing, blackPieceRank, blackkingPos, "BK");
 initialBoardState.push(bk);
-let wk = new ChessPiece(whiteKing, whitePieceRank, blackkingPos);
-initialBoardState.push(wk)
-let wq = new ChessPiece(whiteQueen, whitePieceRank, queenPos);
+let wk = new ChessPiece(whiteKing, whitePieceRank, blackkingPos, "WK");
+initialBoardState.push(wk);
+let wq = new ChessPiece(whiteQueen, whitePieceRank, queenPos, "WQ");
 initialBoardState.push(wq);
-let bq = new ChessPiece(blackQueen, blackPieceRank, queenPos);
-initialBoardState.push(bq)
-let br1 = new ChessPiece(blackRook, blackPieceRank, 0)
-initialBoardState.push(br1)
-let br2 = new ChessPiece(blackRook, blackPieceRank, 7)
-initialBoardState.push(br2)
-let wr1 = new ChessPiece(whiteRook, whitePieceRank, 0)
-initialBoardState.push(wr1)
-let wr2 = new ChessPiece(whiteRook, whitePieceRank, 7)
-initialBoardState.push(wr2)
+let bq = new ChessPiece(blackQueen, blackPieceRank, queenPos, "BQ");
+initialBoardState.push(bq);
+let br1 = new ChessPiece(blackRook, blackPieceRank, 0, "BR");
+initialBoardState.push(br1);
+let br2 = new ChessPiece(blackRook, blackPieceRank, 7, "BR");
+initialBoardState.push(br2);
+let wr1 = new ChessPiece(whiteRook, whitePieceRank, 0, "WR");
+initialBoardState.push(wr1);
+let wr2 = new ChessPiece(whiteRook, whitePieceRank, 7, "WR");
+initialBoardState.push(wr2);
 
-let wb1 = new ChessPiece(whiteBishop, whitePieceRank, 2)
-initialBoardState.push(wb1)
-let wb2 = new ChessPiece(whiteBishop, whitePieceRank, 5)
-initialBoardState.push(wb2)
-let bb1 = new ChessPiece(blackBishop, blackPieceRank, 2)
-initialBoardState.push(bb1)
-let bb2 = new ChessPiece(blackBishop, blackPieceRank, 5)
-initialBoardState.push(bb2)
+let wb1 = new ChessPiece(whiteBishop, whitePieceRank, 2, "WB");
+initialBoardState.push(wb1);
+let wb2 = new ChessPiece(whiteBishop, whitePieceRank, 5, "WB");
+initialBoardState.push(wb2);
+let bb1 = new ChessPiece(blackBishop, blackPieceRank, 2, "BB");
+initialBoardState.push(bb1);
+let bb2 = new ChessPiece(blackBishop, blackPieceRank, 5, "BB");
+initialBoardState.push(bb2);
 
-let wk1 = new ChessPiece(whiteKnight, whitePieceRank, 1);
-initialBoardState.push(wk1)
-let wk2 = new ChessPiece(whiteKnight, whitePieceRank, 6);
-initialBoardState.push(wk2)
-let bk1 = new ChessPiece(blackKnight, blackPieceRank, 1);
-initialBoardState.push(bk1)
-let bk2 = new ChessPiece(blackKnight, blackPieceRank, 6);
-initialBoardState.push(bk2)
+let wk1 = new ChessPiece(whiteKnight, whitePieceRank, 1, "WH");
+initialBoardState.push(wk1);
+let wk2 = new ChessPiece(whiteKnight, whitePieceRank, 6, "WH");
+initialBoardState.push(wk2);
+let bk1 = new ChessPiece(blackKnight, blackPieceRank, 1, "BH");
+initialBoardState.push(bk1);
+let bk2 = new ChessPiece(blackKnight, blackPieceRank, 6, "BH");
+initialBoardState.push(bk2);
 
 
 
 const Chessboard = (props) => {
-    const [moving_piece, setMovingPiece] = useState(null)
+    const [moving_piece, setMovingPiece] = useState(null);
     const [gridX, setGridX] = useState(0);
     const [gridY, setGridY] = useState(0);
-    const [pieces, setPieces] = useState(initialBoardState)
+    const [pieces, setPieces] = useState(initialBoardState);
     const chessboardRef = useRef(null);
-
-
+    const referee = new Referee();
 
     function drop_piece(e) {
-        const chessboard = chessboardRef.current
-
+        const chessboard = chessboardRef.current;
         if (moving_piece && chessboard) {
             const y = Math.floor((e.clientX - 500) / 100);
             const x = Math.floor(e.clientY / 100);
 
-            setPieces((value) => {
-                const pieces = value.map((p) => {
-                    if (p.x === gridX && p.y === gridY) {
-                        p.x = x;
-                        p.y = y;
-                    }
-                    return p;
-                })
-                return pieces
-            })
+            const attacking_piece = pieces.find(p => p.x == gridX && p.y == gridY);
+
+            if(attacking_piece)
+            {
+                const valid = referee.ValidMove(gridX, gridY, x, y, attacking_piece.type, pieces);
+
+                if(valid)
+                {
+                    const updated_pieces = pieces.reduce((results, piece) => {
+                        if(piece.x == attacking_piece.x && piece.y == attacking_piece.y)
+                        {
+                            piece.x = x;
+                            piece.y = y;
+                            results.push(piece);
+                        }
+                        else if(!(piece.x == x && piece.y == y))
+                        {
+                            results.push(piece);
+                        }
+                        return results;
+                    }, []);
+                    setPieces(updated_pieces);
+                }
+                else
+                {
+                    moving_piece.style.position = "relative";
+                    moving_piece.style.removeProperty("top");
+                    moving_piece.style.removeProperty("left");
+                }
+            }
             setMovingPiece(null);
         }
-
     }
 
     function grab_piece(e) {
@@ -125,22 +144,14 @@ const Chessboard = (props) => {
 
         const element = e.target;
         if (element.classList.contains("piece") && chessboard) {
-
-
             setGridX(Math.floor(e.clientY / 100));
             setGridY(Math.floor((e.clientX - 500) / 100));
-            console.log(e);
             const x = e.clientX - 50;
             const y = e.clientY - 50;
             element.style.position = "absolute";
             element.style.left = `${x}px`;
             element.style.top = `${y}px`;
             setMovingPiece(element)
-            let x1 = Math.floor((x + 50 - 500) / 100);
-            let y1 = Math.floor((y + 50) / 100);
-
-
-
         }
     }
 
@@ -154,8 +165,6 @@ const Chessboard = (props) => {
             const x = e.clientX - 50;
             const y = e.clientY - 50;
             moving_piece.style.position = "absolute";
-            // moving_piece.style.left = `${x}px`;
-            // moving_piece.style.top = `${y}px`;
 
             if (x < minX) {
                 moving_piece.style.left = `${minX}px`;
@@ -180,7 +189,6 @@ const Chessboard = (props) => {
     }
     let chess_grid = [];
     let number = 0;
-
 
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
